@@ -27,9 +27,6 @@ class HTTPTimetableService: TimetableService {
                 }
                 return Observable.just(decoded.results)
             }
-            .catchError { error in
-                Observable.error(error)
-            }
 
         return requestObservable
             .observeOn(MainScheduler.instance)
