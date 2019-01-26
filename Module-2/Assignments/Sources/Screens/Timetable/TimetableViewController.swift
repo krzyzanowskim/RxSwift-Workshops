@@ -71,7 +71,7 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
         //      prepareForReuse() wewnątrz klasy TimetableEntryCell
         // 3. Zweryfikuj poprawność refactoringu uruchamiając testy jednostkowe
 
-        cell.checkInButton.rx.tap.asDriver().drive(onNext: { [weak self] _ in
+        cell.checkInButton.rx.tap.subscribe(onNext: { [weak self] _ in
             self?.pushCheckInViewController(timetableID: entry.id)
         }).disposed(by: cell.disposeBag)
     }
