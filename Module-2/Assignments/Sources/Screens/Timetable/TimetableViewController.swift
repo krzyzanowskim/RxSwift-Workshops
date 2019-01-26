@@ -1,6 +1,7 @@
 import RxCocoa
 import RxSwift
 import UIKit
+import RxSwiftUtilities
 
 class TimetableViewController: UIViewController {
 
@@ -13,6 +14,8 @@ class TimetableViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
     }
+
+    private let activityIndicator = ActivityIndicator()
 
     var timetableView: TimetableView! {
         return view as? TimetableView
@@ -30,6 +33,7 @@ class TimetableViewController: UIViewController {
         super.viewDidLoad()
 
         title = "Timetable"
+        setUpActivityIndicator()
         setUpSegments()
         selectFirstSegment()
         setUpTableViewDataSource()
@@ -48,9 +52,14 @@ class TimetableViewController: UIViewController {
     private let presenter: TimeTableCellPresenter
     private let timetableFilter: TimetableFiltering
 
+    private func setUpActivityIndicator() {
+        activityIndicator.asDriver().drive(UIApplication.shared.rx.progress).disposed(by: disposeBag)
+        //activityIndicator.asObservable().bind(to: UIApplication.shared.rx.progress).disposed(by: disposeBag)
+    }
+
     private func setUpTableViewDataSource() {
-        Observable
-            .combineLatest(timetableService.timetableEntries, selectedFilter)
+        let entries = timetableService.timetableEntries.trackActivity(activityIndicator)
+        Observable.combineLatest(entries,selectedFilter)
             { [timetableFilter] entries, selectedFilter -> [TimetableEntry] in
                 let sortedEntries = entries.sorted { $0.departureTime < $1.departureTime }
                 return timetableFilter.apply(filter: selectedFilter, for: sortedEntries)
