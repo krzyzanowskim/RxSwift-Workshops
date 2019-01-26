@@ -54,19 +54,24 @@ class TimetableViewController: UIViewController {
 
     private func setUpActivityIndicator() {
         activityIndicator.asDriver().drive(UIApplication.shared.rx.progress).disposed(by: disposeBag)
-        //activityIndicator.asObservable().bind(to: UIApplication.shared.rx.progress).disposed(by: disposeBag)
     }
 
     private func setUpTableViewDataSource() {
-        let entries = timetableService.timetableEntries.trackActivity(activityIndicator)
-        Observable.combineLatest(entries,selectedFilter)
-            { [timetableFilter] entries, selectedFilter -> [TimetableEntry] in
+        let initial = Observable.just(())
+        let refresh = refreshControl.rx.controlEvent(.valueChanged).asObservable()
+        let entries = Observable.merge(initial, refresh).flatMap { [unowned self] in
+            self.timetableService.timetableEntries
+            .do(onNext: { _ in
+                self.refreshControl.endRefreshing()
+            })
+            .trackActivity(self.activityIndicator)
+        }
+        Observable.combineLatest(entries, selectedFilter) { [timetableFilter] entries, selectedFilter -> [TimetableEntry] in
                 let sortedEntries = entries.sorted { $0.departureTime < $1.departureTime }
                 return timetableFilter.apply(filter: selectedFilter, for: sortedEntries)
             }
             .asDriver(onErrorDriveWith: .just([]))
-            .drive(timetableView.tableView.rx.items(cellIdentifier: "TimetableCell"))
-            { [weak self] (_, entry, cell: TimetableEntryCell) in
+            .drive(timetableView.tableView.rx.items(cellIdentifier: "TimetableCell")) { [weak self] (_, entry, cell: TimetableEntryCell) in
                 self?.configure(cell: cell, with: entry)
             }
             .disposed(by: disposeBag)
