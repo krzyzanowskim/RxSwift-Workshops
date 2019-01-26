@@ -73,6 +73,7 @@
 		54FB8ED91FB262F700BDE4B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54FB8ED81FB262F700BDE4B5 /* Assets.xcassets */; };
 		54FB8EDC1FB262F700BDE4B5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54FB8EDA1FB262F700BDE4B5 /* LaunchScreen.storyboard */; };
 		54FB8EE81FB264F400BDE4B5 /* TimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FB8EE71FB264F400BDE4B5 /* TimetableView.swift */; };
+		75A577D521FCB45D00DCCF58 /* TimetableViewController+ActivityIndicatorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C93112921DD0BBB00CF3C99 /* TimetableViewController+ActivityIndicatorSpec.swift */; };
 		79684EEA21AD816C00C0C29E /* CheckInStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684EE921AD816C00C0C29E /* CheckInStatus.swift */; };
 		799D1C5321B7FD2300D2CB53 /* WindowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799D1C5221B7FD2300D2CB53 /* WindowFactory.swift */; };
 		799D1C5821B7FE0300D2CB53 /* WindowFactorySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799D1C5621B7FDB200D2CB53 /* WindowFactorySpec.swift */; };
@@ -958,6 +959,7 @@
 				326724FDB43C8FE79CE5B9CE /* TimetableEntryResponseSpec.swift in Sources */,
 				326723CD751DC9FD70D6FC22 /* Bundle+JSONData.swift in Sources */,
 				326724103CCBC4E172DF11E4 /* String+Date.swift in Sources */,
+				75A577D521FCB45D00DCCF58 /* TimetableViewController+ActivityIndicatorSpec.swift in Sources */,
 				32672C25BFD73DCDF4E8DA49 /* Timezone+GMT.swift in Sources */,
 				326728CEB559E98BF159E6D5 /* Bundle+TestBundle.swift in Sources */,
 				326724FC2E9C405943838F4C /* HTTPTimetableServiceSpec.swift in Sources */,
