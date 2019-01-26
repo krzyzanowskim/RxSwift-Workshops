@@ -45,8 +45,8 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
     private let timetableFilter: TimetableFiltering
 
     private func setUpTableViewDataSource() { // TODO_2_REPLACE: Zastąp implementację funkcji
-        _ = Observable.combineLatest(timetableService.timetableEntries,
-                                     timetableView.filterView.segmentedControl.rx.selectedSegmentIndex.asObservable())
+        Observable.combineLatest(timetableService.timetableEntries,
+                                 timetableView.filterView.segmentedControl.rx.selectedSegmentIndex.asObservable())
             .filter { $1 != UISegmentedControl.noSegment }
             .map { (entries: [TimetableEntry], index: Int) -> [TimetableEntry] in
                 let filter = Filter.allCases[index]
@@ -57,6 +57,7 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
             .drive(timetableView.tableView.rx.items(cellIdentifier: "TimetableCell", cellType: TimetableEntryCell.self)) { (row, element, cell) in
                 self.configure(cell: cell, with: element)
             }
+            .disposed(by: disposeBag)
     }
 
     private func configure(cell: TimetableEntryCell, with entry: TimetableEntry) {
