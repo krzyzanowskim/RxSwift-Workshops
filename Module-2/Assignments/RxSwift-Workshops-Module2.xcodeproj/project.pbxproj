@@ -75,6 +75,7 @@
 		54FB8EE81FB264F400BDE4B5 /* TimetableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FB8EE71FB264F400BDE4B5 /* TimetableView.swift */; };
 		75A577D521FCB45D00DCCF58 /* TimetableViewController+ActivityIndicatorSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C93112921DD0BBB00CF3C99 /* TimetableViewController+ActivityIndicatorSpec.swift */; };
 		75A577D621FCB9A100DCCF58 /* TimetableViewController+PullToRefreshSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C93112521DD07AC00CF3C99 /* TimetableViewController+PullToRefreshSpec.swift */; };
+		75A577D721FCC43600DCCF58 /* CheckInViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32672AC5CCE0100A93065CDC /* CheckInViewControllerSpec.swift */; };
 		79684EEA21AD816C00C0C29E /* CheckInStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684EE921AD816C00C0C29E /* CheckInStatus.swift */; };
 		799D1C5321B7FD2300D2CB53 /* WindowFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799D1C5221B7FD2300D2CB53 /* WindowFactory.swift */; };
 		799D1C5821B7FE0300D2CB53 /* WindowFactorySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799D1C5621B7FDB200D2CB53 /* WindowFactorySpec.swift */; };
@@ -975,6 +976,7 @@
 				32672D3774ADC6C5A9FCD62A /* TimetableEntry+TestData.swift in Sources */,
 				32672635401B17BEF7469C56 /* DateFormatter+WithGMT.swift in Sources */,
 				32672BC1A49DBE9462FF7504 /* TimetableEntryCellSpec.swift in Sources */,
+				75A577D721FCC43600DCCF58 /* CheckInViewControllerSpec.swift in Sources */,
 				8C93112121DCF3A800CF3C99 /* UIApplication+RxSpec.swift in Sources */,
 				799D1C5821B7FE0300D2CB53 /* WindowFactorySpec.swift in Sources */,
 				32672A9451958081D4A04006 /* CheckInServiceSpy.swift in Sources */,

@@ -43,6 +43,17 @@ class CheckInViewController: UIViewController {
     private func setupBindings() {
         /* TODO: set up bindings for check in button */
 
+        checkInView.checkInButton.rx.tap
+            .withLatestFrom(checkInView.nameTextField.rx.text.orEmpty)
+            .flatMapLatest { [unowned self] username in
+                self.checkInService.checkIn(timetableID: self.timetableID, username: username).map({ _ in
+                    return CheckInStatus.success // fire checkInComplete below
+                })
+                .catchErrorJustReturn(.error)
+            }
+            .bind(to: checkInStatusSubject)
+            .disposed(by: disposeBag)
+
         checkInComplete
             .subscribe(onNext: { [weak self] in
                 _ = self?.popController?(true)

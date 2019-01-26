@@ -59,11 +59,12 @@ class TimetableViewController: UIViewController {
     private func setUpTableViewDataSource() {
         let initial = Observable.just(())
         let refresh = refreshControl.rx.controlEvent(.valueChanged).asObservable()
-        let entries = Observable.merge(initial, refresh).flatMap { [unowned self] in
-            self.timetableService.timetableEntries
-            .do(onNext: { _ in
-                self.refreshControl.endRefreshing()
-            })
+        let entries = Observable.merge(initial, refresh)
+            .flatMap { [unowned self] in
+                self.timetableService.timetableEntries
+                .do(onNext: { _ in
+                    self.refreshControl.endRefreshing()
+                })
             .trackActivity(self.activityIndicator)
         }
         Observable.combineLatest(entries, selectedFilter) { [timetableFilter] entries, selectedFilter -> [TimetableEntry] in
