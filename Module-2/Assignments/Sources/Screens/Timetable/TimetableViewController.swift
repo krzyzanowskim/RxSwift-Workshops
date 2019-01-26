@@ -4,7 +4,7 @@ import UIKit
 
 class TimetableViewController: UIViewController {
 
-    init(timetableService: TimetableService = WebSocketTimetableService(),
+    init(timetableService: TimetableService = HTTPTimetableService(),
          presenter: TimeTableCellPresenter = TimeTableCellPresenter(),
          filter: TimetableFiltering = TimetableFilter()) {
         self.timetableService = timetableService
