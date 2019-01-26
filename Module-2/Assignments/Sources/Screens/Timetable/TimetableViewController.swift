@@ -1,12 +1,10 @@
-// DONE_0: Zaimportuj RxCocoa & RxSwift
-import UIKit
 import RxCocoa
 import RxSwift
+import UIKit
 
-class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // TODO_2_DELETE: Usuń `UITableViewDataSource`
-    private(set) var disposeBag: DisposeBag = DisposeBag()
+class TimetableViewController: UIViewController {
 
-    init(timetableService: TimetableService = LocalFileTimetableService(),
+    init(timetableService: TimetableService = HTTPTimetableService(),
          presenter: TimeTableCellPresenter = TimeTableCellPresenter(),
          filter: TimetableFiltering = TimetableFilter()) {
         self.timetableService = timetableService
@@ -38,24 +36,29 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
         setUpRefreshControl()
     }
 
+    var selectedFilter: Observable<Filter> {
+        return timetableView.filterView.segmentedControl.rx.selectedSegmentIndex
+            .filter { $0 >= 0 }
+            .map { Filter.allCases[$0] }
+    }
+
     // MARK: - Private
 
     private let timetableService: TimetableService
     private let presenter: TimeTableCellPresenter
     private let timetableFilter: TimetableFiltering
 
-    private func setUpTableViewDataSource() { // TODO_2_REPLACE: Zastąp implementację funkcji
-        Observable.combineLatest(timetableService.timetableEntries,
-                                 timetableView.filterView.segmentedControl.rx.selectedSegmentIndex.asObservable())
-            .filter { $1 != UISegmentedControl.noSegment }
-            .map { (entries: [TimetableEntry], index: Int) -> [TimetableEntry] in
-                let filter = Filter.allCases[index]
-                return self.timetableFilter.apply(filter: filter, for: entries)
+    private func setUpTableViewDataSource() {
+        Observable
+            .combineLatest(timetableService.timetableEntries, selectedFilter)
+            { [timetableFilter] entries, selectedFilter -> [TimetableEntry] in
+                let sortedEntries = entries.sorted { $0.departureTime < $1.departureTime }
+                return timetableFilter.apply(filter: selectedFilter, for: sortedEntries)
             }
-            .map { $0.sorted(by: { $0.departureTime < $1.departureTime }) }
-            .asDriver(onErrorJustReturn: []) // subscribe -> driver
-            .drive(timetableView.tableView.rx.items(cellIdentifier: "TimetableCell", cellType: TimetableEntryCell.self)) { (row, element, cell) in
-                self.configure(cell: cell, with: element)
+            .asDriver(onErrorDriveWith: .just([]))
+            .drive(timetableView.tableView.rx.items(cellIdentifier: "TimetableCell"))
+            { [weak self] (_, entry, cell: TimetableEntryCell) in
+                self?.configure(cell: cell, with: entry)
             }
             .disposed(by: disposeBag)
     }
@@ -63,17 +66,12 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
     private func configure(cell: TimetableEntryCell, with entry: TimetableEntry) {
         presenter.present(model: entry, in: cell)
 
-        // DONE_3:
-        // 1. Usuń fragment kodu oznaczony komentarzem `TODO_3_DELETE`.
-        // 2. Zastąp wywołanie closure'a rx'owym obsłużeniem tapnięcia na przycisk:
-        //   a. zastanów się co stanie się jeśli subskrypcja zostanie przypięta do dispose baga wewnątrz controllera
-        //   b. rozwiąż problem zdiagnozowany w punkcie a. - do tego celu przenalizuj implementację funkcji
-        //      prepareForReuse() wewnątrz klasy TimetableEntryCell
-        // 3. Zweryfikuj poprawność refactoringu uruchamiając testy jednostkowe
-
-        cell.checkInButton.rx.tap.subscribe(onNext: { [weak self] _ in
-            self?.pushCheckInViewController(timetableID: entry.id)
-        }).disposed(by: cell.disposeBag)
+        cell.checkInButton.rx.tap.asObservable()
+            .map { entry.id }
+            .subscribe(onNext: { [weak self] timetableID in
+                self?.pushCheckInViewController(timetableID: timetableID)
+            })
+            .disposed(by: cell.disposeBag)
     }
 
     private func pushCheckInViewController(timetableID: Int) {
@@ -83,19 +81,14 @@ class TimetableViewController: UIViewController/*, UITableViewDataSource*/ { // 
 
     // MARK: Filter view
 
-    // DONE_1:
-    // 1. Usuń wszystkie fragmenty kodu oznaczone komentarzem: `TODO_1_DELETE`
-    // 2. Zrefactoruj kod tak, aby użyć właściwości rx.selectedSegmentIndex na UISegmentedControl:
-    //   a. zamień wyliczenia filtru na przekształcenia funkcyjne
-    //   b. zawołaj prywatną metodę update(filter:entries:) w subskrypcji
-    // 3. Zweryfikuj poprawność refactoringu uruchamiając testy jednostkowe
-
     private func setUpSegments() {
         Filter.allCases.enumerated().forEach { index, filter in
             let segmentedControl = timetableView.filterView.segmentedControl
             segmentedControl.insertSegment(withTitle: filter.rawValue, at: index, animated: false)
         }
     }
+
+    private let disposeBag = DisposeBag()
 
     private func selectFirstSegment() {
         timetableView.filterView.segmentedControl.selectedSegmentIndex = 0
