@@ -11,7 +11,9 @@ private let inputRight: Observable<Int> = Observable.events([.next(1), .next(2),
 // Edytuj tylko strumień przypisany do zmiennej `solution`.
 
 private let solution: Observable<Int> = Observable.of(inputLeft, inputRight)
-    .map { _ in 1 }
+    .merge()
+    .takeWhile { $0 < 20 }
+
 
 class Exercise3: XCTestCase {
 

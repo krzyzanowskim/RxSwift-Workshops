@@ -11,7 +11,8 @@ private let input: Observable<Int> = Observable.of(1, 2, 2, 3, 4, 5, 5, 6, 7, 8,
 // Edytuj tylko strumień przypisany do zmiennej `solution`.
 
 private let solution: Observable<[Int]> = input
-    .map { _ in [] }
+    .distinctUntilChanged()
+    .toArray()
 
 class Exercise6: XCTestCase {
 

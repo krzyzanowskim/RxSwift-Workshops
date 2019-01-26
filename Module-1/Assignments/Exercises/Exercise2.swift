@@ -9,7 +9,7 @@ private let input = Observable.of("👮‍♀️", "👮‍♀️", "👩‍💻
 // Wybierz z niego tylko policjantów a następnie zamień ich na radiowozy.
 // Edytuj tylko strumień przypisany do zmiennej `solution`.
 
-private let solution: Observable<String> = input
+private let solution: Observable<String> = input.filter({ $0 == "👮‍♀️" }).map { _ in "🚓" }
 
 class Exercise2: XCTestCase {
 

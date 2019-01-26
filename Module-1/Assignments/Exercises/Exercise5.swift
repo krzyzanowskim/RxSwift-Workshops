@@ -10,6 +10,7 @@ private let input: Observable<Int> = Observable.events([.next(1), .next(2), .nex
 // Edytuj tylko strumień przypisany do zmiennej `solution`.
 
 private let solution: Observable<Int> = input
+    .catchErrorJustReturn(-1)
 
 class Exercise5: XCTestCase {
 

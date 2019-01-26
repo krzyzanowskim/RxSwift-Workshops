@@ -9,7 +9,7 @@ private let input = Observable.of("🍕", "🍎", "🍎", "🍺", "🥕", "🍺"
 // Użyj odpowiedniego operatora, aby otrzymać tylko te, które programiści lubią najbardziej. Podpowiedź: 🍕 i 🍺 :)
 // Edytuj tylko strumień przypisany do zmiennej `solution`.
 
-private let solution: Observable<String> = input
+private let solution: Observable<String> = input.filter { $0 == "🍕" || $0 == "🍺" }
 
 class Exercise1: XCTestCase {
 
